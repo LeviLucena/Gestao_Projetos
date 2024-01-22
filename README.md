@@ -59,7 +59,7 @@ Tela de Login
 - Clone o repositório para o seu ambiente local.
   
 ```bash
-git clone https://github.com/LeviLucena/painel-online.git
+git clone https://github.com/LeviLucena/Gestao_Projetos.git
 ```
 
 - Importe o arquivo SQL fornecido para criar o banco de dados e as tabelas necessárias.
