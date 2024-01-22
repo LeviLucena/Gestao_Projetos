@@ -50,9 +50,6 @@ Tela de Login
 | ---------| ---------| ---------|
 | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/57f3faf5-cb58-4cdb-b0b5-f84d71467498) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/90d290a3-e183-4029-9bc9-6836df3fac15) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/eef3ea2d-c8e5-4b46-aa49-276a2c69c637)
 
-
-
-![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/d9f8d0c1-28cb-40d9-897c-2e051e1946e7)
-![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/616ec559-a3ed-4be9-bbfc-c268dd28d5d1)
-![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/0278e73c-d199-4d5e-abba-8a42e404061b)
-
+| Imagem 13 | Imagem 14 | Imagem 15 |
+| ---------| ---------| ---------|
+| ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/d9f8d0c1-28cb-40d9-897c-2e051e1946e7) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/616ec559-a3ed-4be9-bbfc-c268dd28d5d1) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/0278e73c-d199-4d5e-abba-8a42e404061b)
