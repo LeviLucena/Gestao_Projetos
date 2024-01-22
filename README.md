@@ -58,7 +58,7 @@ Tela de Login
 
 - Clone o repositório para o seu ambiente local.
   
-  ```bash
+```bash
 git clone https://github.com/LeviLucena/painel-online.git
 ```
 
