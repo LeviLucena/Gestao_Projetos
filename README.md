@@ -36,10 +36,10 @@ Tela de Login
 
 | Imagem 1 | Imagem 2 | Imagem 3 |
 | ---------| ---------| ---------|
-|![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/9b1369d8-c5d3-4ed9-a367-97d9159c8f85) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/8b814015-895e-4019-ab65-b98662efeb28) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/8d698b37-7a8a-42d8-9363-a914b94cd031) 
+|![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/9b1369d8-c5d3-4ed9-a367-97d9159c8f85) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/8b814015-895e-4019-ab65-b98662efeb28) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/8d698b37-7a8a-42d8-9363-a914b94cd031) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/f8063add-ed2c-444e-83d8-2b972213605b)
 
 
-![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/f8063add-ed2c-444e-83d8-2b972213605b)
+
 ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/615e3f68-5dab-4485-baf6-9d5089143f26)
 ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/34698b14-c45c-4cc1-b3c9-52a51b8ca187)
 ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/42ff4797-5d2a-46ae-afbf-4f1dea222389)
