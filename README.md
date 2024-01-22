@@ -3,7 +3,6 @@
 Visa gerenciar os projetos, proporcionando uma visão geral abrangente, oferecendo funcionalidades para cadastrar, consultar e editar informações relacionadas aos projetos. 
 (Os dados apresentados aqui são fictícios)
 
-Tela de Login
 ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/d4f0f75d-7a18-45be-bdc1-8d5d78cb81c9)
 
 
