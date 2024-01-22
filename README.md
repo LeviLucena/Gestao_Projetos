@@ -32,7 +32,7 @@ Tela de Login
 - PHP 8.2.4
 - MySQL ou MariaDB 10.4.28
 
-# Galeria de Imagens
+# Screenshots
 
 | Imagem 1 | Imagem 2 | Imagem 3 |
 | ---------| ---------| ---------|
@@ -53,3 +53,25 @@ Tela de Login
 | Imagem 13 | Imagem 14 | Imagem 15 |
 | ---------| ---------| ---------|
 | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/d9f8d0c1-28cb-40d9-897c-2e051e1946e7) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/616ec559-a3ed-4be9-bbfc-c268dd28d5d1) | ![image](https://github.com/LeviLucena/Gestao_Projetos/assets/34045910/0278e73c-d199-4d5e-abba-8a42e404061b)
+
+## Instruções de Instalação
+
+- Clone o repositório para o seu ambiente local.
+  
+  ```bash
+git clone https://github.com/LeviLucena/painel-online.git
+```
+
+- Importe o arquivo SQL fornecido para criar o banco de dados e as tabelas necessárias.
+- Configure as informações de conexão com o banco de dados no arquivo de configuração.
+- Configure o servidor web para apontar para o diretório do projeto.
+- Acesse a aplicação através do navegador web.
+
+## Contribuições
+
+Contribuições são bem-vindas! Se você tiver ideias de melhorias, correções de bugs ou novas funcionalidades, sinta-se à vontade para abrir uma nova issue ou enviar um pull request.
+Licença. Este projeto é licenciado sob a licença MIT. Você é livre para usar, modificar e distribuir o código conforme necessário.
+
+Espero que isso ajude a descrever seu projeto de Gestão de Equipamentos de TI para o GitHub. Boa sorte com o seu projeto!
+
+## Autor: [![Linkedin Badge](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/levilucena/)](https://www.linkedin.com/in/levilucena/)
