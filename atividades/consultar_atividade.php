@@ -267,7 +267,11 @@ function interpolarCores($inicio, $meio, $fim, $fracao)
     <script>
         $(document).ready(function () {
             // Inicializa o DataTables para a tabela de atividades
-            $('#atividades-table').DataTable();
+            $('#atividades-table').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese.json"
+                    }
+                });
         });
     </script>
 
