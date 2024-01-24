@@ -260,7 +260,11 @@ function buscarDadosEntregas($conn)
     <script>
         $(document).ready(function () {
             // Inicializa o DataTables para a tabela de projetos
-            var table = $('#projetos-table').DataTable();
+            var table = $('#projetos-table').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese.json"
+                    }
+                });
 
             // Adiciona um ouvinte de evento para os botões "Visualizar" usando delegação de eventos
             $('#projetos-table tbody').on('click', '.btn-visualizar', function () {
