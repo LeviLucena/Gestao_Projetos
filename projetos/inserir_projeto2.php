@@ -9,7 +9,6 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-//include_once("config/conexao.php");
 // Função para conectar ao banco de dados
 function conectarBanco()
 {
@@ -36,10 +35,10 @@ if (isset($_GET['mensagem'])) {
     //echo '<div class="alert alert-success">' . htmlspecialchars//($_GET['mensagem']) . '</div>';
 }
 
-// Função para buscar dados do banco de dados Status Demanda
-function buscarDadosStatusDemanda($conn, $table, $field)
+// Função para buscar dados do banco de dados Situação
+function buscarDadosSituacao($conn, $table, $field)
 {
-    $table = "status_demanda";
+    $table = 'situacao';
     $sql = "SELECT ID, Nome FROM $table";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
@@ -51,10 +50,10 @@ function buscarDadosStatusDemanda($conn, $table, $field)
     }
 }
 
-// Função para buscar dados do banco de dados Tipo Demanda
-function buscarDadosTipoDemanda($conn, $table, $field)
+// Função para buscar dados do banco de dados Gerente
+function buscarDadosGerente($conn, $table, $field)
 {
-    $table = "tipo_demanda";
+    $table = 'gerente_projeto';
     $sql = "SELECT ID, Nome FROM $table";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
@@ -66,10 +65,40 @@ function buscarDadosTipoDemanda($conn, $table, $field)
     }
 }
 
-// Função para buscar dados do banco de dados dos Projetos
-function buscarDadosProjetos($conn, $table, $field)
+// Função para buscar dados do banco de dados Tipo do Projeto
+function buscarDadosTipoProjeto($conn, $table, $field)
 {
-    $table = "projetos";
+    $table = 'tipo_projeto';
+    $sql = "SELECT ID, Nome FROM $table";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<option value="' . $row["ID"] . '">' . $row["Nome"] . '</option>';
+        }
+    } else {
+        echo '<option value="">Nenhum registro encontrado</option>';
+    }
+}
+
+// Função para buscar dados do banco de dados Subtipo do Projeto
+function buscarDadosSubtipoProjeto($conn, $table, $field)
+{
+    $table = 'subtipo_projeto';
+    $sql = "SELECT ID, Nome FROM $table";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<option value="' . $row["ID"] . '">' . $row["Nome"] . '</option>';
+        }
+    } else {
+        echo '<option value="">Nenhum registro encontrado</option>';
+    }
+}
+
+// Função para buscar dados do banco de dados Nível de Prioridade do Projeto
+function buscarDadosNivelPrioridadeProjeto($conn, $table, $field)
+{
+    $table = 'nivel_prioridade_projeto';
     $sql = "SELECT ID, Nome FROM $table";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
@@ -96,10 +125,10 @@ function buscarDadosCriticidade($conn, $table, $field)
     }
 }
 
-// Função para buscar dados do banco de dados das Coordenadorias
+// Função para buscar dados do banco de dados Coordenadoria
 function buscarDadosCoordenadoria($conn, $table, $field)
 {
-    $table = "coordenadoria";
+    $table = 'coordenadoria';
     $sql = "SELECT ID, Nome FROM $table";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
@@ -111,23 +140,42 @@ function buscarDadosCoordenadoria($conn, $table, $field)
     }
 }
 
-// Função para inserir uma nova demanda
+// Função para buscar dados do banco de dados Contatos Técnicos
+function buscarDadosContatos($conn, $table, $field)
+{
+    $table = 'contatos_tecnicos';
+    $sql = "SELECT ID, Nome FROM $table";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<option value="' . $row["ID"] . '">' . $row["Nome"] . '</option>';
+        }
+    } else {
+        echo '<option value="">Nenhum registro encontrado</option>';
+    }
+}
+
+
+// Função para inserir um novo contato
 function inserirContato($conn, $data)
 {
-    $query = "INSERT INTO cadastro_da_demanda (Numero_da_Demanda, Contrato, Descricao, Solicitante, Projetos_ID, Coordenadoria_ID, Status_demanda_ID, Tipo_demanda_ID, Criticidade_ID, Valor_demanda, Data_Solicitacao, Data_Aprovacao, Previsao_Termino) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO projetos (Nome, Objetivo, Data_Inicio, Prazo_Estimado, Situacao_ID, Tipo_Projeto_ID, Subtipo_Projeto_ID, Nivel_Prioridade_Projeto_ID, Criticidade_ID, Coordenadoria_ID, Orcamento_Previsto, Gerente_Projeto_ID, Contatos_Tecnicos_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
 
-    $stmt->bind_param("sssssssssssis", $data['Numero_da_Demanda'], $data['Numero_do_Contrato'], $data['Descricao'], $data['Solicitante'], $data['Projetos'], $data['Coordenadoria'], $data['Status_da_Demanda'], $data['Tipo_da_Demanda'], $data['Criticidade_ID'], $data['Valor_da_Demanda'], $data['Data_Solicitacao'], $data['data_aprovacao'], $data['previsao_termino'], );
+    // Bind parameters
+    $stmt->bind_param("ssssiiiiidsss", $data['Nome'], $data['Objetivo'], $data['data_inicio'], $data['Prazo_Estimado'], $data['Situacao'], $data['Tipo_do_Projeto'], $data['Subtipo_do_Projeto'], $data['Nivel_de_Prioridade'], $data['Criticidade'], $data['Coordenadoria'], $data['Orcamento_Previsto'], $data['Gerente_do_Projeto'], $data['Contatos_Tecnicos']);
 
     // Execute statement
     $stmt->execute();
 
     // Check for errors
     if ($stmt->errno) {
-        echo "Erro ao inserir demanda: " . $stmt->error;
+        $mensagem = "Erro ao inserir projeto: " . $stmt->error;
     } else {
+        // Define a mensagem de sucesso
+        $mensagem = "Projeto inserido com sucesso!";
         // Redireciona para a página de consulta após a inserção
-        header("Location: inserir_demanda.php?mensagem=Demanda inserida com sucesso!");
+        header("Location: inserir_projeto.php?mensagem=" . urlencode($mensagem));
         exit(); // Certifica-se de que o script seja encerrado após o redirecionamento
     }
 
@@ -139,19 +187,19 @@ function inserirContato($conn, $data)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inserir'])) {
     // Obter os dados do formulário
     $data = [
-        'Numero_da_Demanda' => filter_input(INPUT_POST, 'Numero_da_Demanda', FILTER_SANITIZE_NUMBER_INT),
-        'Numero_do_Contrato' => filter_input(INPUT_POST, 'Numero_do_Contrato', FILTER_SANITIZE_STRING),
-        'Descricao' => filter_input(INPUT_POST, 'Descricao', FILTER_SANITIZE_STRING),
-        'Projetos' => filter_input(INPUT_POST, 'Projetos', FILTER_SANITIZE_NUMBER_INT),
-        'Solicitante' => filter_input(INPUT_POST, 'Solicitante', FILTER_SANITIZE_STRING),
-        'Coordenadoria' => filter_input(INPUT_POST, 'Coordenadoria', FILTER_SANITIZE_NUMBER_INT),
-        'Status_da_Demanda' => filter_input(INPUT_POST, 'Status_da_Demanda', FILTER_SANITIZE_NUMBER_INT),
-        'Tipo_da_Demanda' => filter_input(INPUT_POST, 'Tipo_da_Demanda', FILTER_SANITIZE_NUMBER_INT),
+        'Nome' => filter_input(INPUT_POST, 'Nome', FILTER_SANITIZE_STRING),
+        'Objetivo' => filter_input(INPUT_POST, 'Objetivo', FILTER_SANITIZE_STRING),
+        'data_inicio' => filter_input(INPUT_POST, 'data_inicio', FILTER_SANITIZE_NUMBER_INT),
+        'Prazo_Estimado' => filter_input(INPUT_POST, 'Prazo_Estimado', FILTER_SANITIZE_NUMBER_INT),
+        'Situacao' => filter_input(INPUT_POST, 'Situacao', FILTER_SANITIZE_NUMBER_INT),
+        'Tipo_do_Projeto' => filter_input(INPUT_POST, 'Tipo_do_Projeto', FILTER_SANITIZE_NUMBER_INT),
+        'Subtipo_do_Projeto' => filter_input(INPUT_POST, 'Subtipo_do_Projeto', FILTER_SANITIZE_NUMBER_INT),
+        'Nivel_de_Prioridade' => filter_input(INPUT_POST, 'Nivel_de_Prioridade', FILTER_SANITIZE_NUMBER_INT),
         'Criticidade' => filter_input(INPUT_POST, 'Criticidade', FILTER_SANITIZE_NUMBER_INT),
-        'Valor_da_Demanda' => formatarReaisParaNumero(filter_input(INPUT_POST, 'Valor_da_Demanda')),
-        'Data_Solicitacao' => filter_input(INPUT_POST, 'Data_Solicitacao', FILTER_SANITIZE_NUMBER_INT),
-        'data_aprovacao' => filter_input(INPUT_POST, 'data_aprovacao', FILTER_SANITIZE_NUMBER_INT),
-        'previsao_termino' => filter_input(INPUT_POST, 'previsao_termino', FILTER_SANITIZE_NUMBER_INT),
+        'Coordenadoria' => filter_input(INPUT_POST, 'Coordenadoria', FILTER_SANITIZE_NUMBER_INT),
+        'Orcamento_Previsto' => formatarReaisParaNumero(filter_input(INPUT_POST, 'Orcamento_Previsto')),
+        'Gerente_do_Projeto' => filter_input(INPUT_POST, 'Gerente_do_Projeto', FILTER_SANITIZE_NUMBER_INT),
+        'Contatos_Tecnicos' => filter_input(INPUT_POST, 'Contatos_Tecnicos_ID', FILTER_SANITIZE_NUMBER_INT),
     ];
 
     // Inserir o novo contato
@@ -166,43 +214,6 @@ function formatarReaisParaNumero($valorReais)
 
     // Converte o valor para número
     return floatval($valor) / 100;
-}
-
-// Processar a atualização do contato quando o formulário é enviado via POST
-if ($_SERVER && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Resto do código de processamento aqui
-
-    // Obtém os dados do formulário
-    $result_usuario = "SELECT * FROM cadastro_da_demanda WHERE id = '$id'";
-    $resultado_usuario = mysqli_query($conn, $result_usuario);
-    $row_usuario = mysqli_fetch_assoc($resultado_usuario);
-
-    if ($row_usuario) {
-        // Obter os dados do formulário
-        $data = [
-            'Numero_da_Demanda' => $row_usuario['Numero_da_Demanda'],
-            'Numero_do_Contrato' => $row_usuario['Contrato'],
-            'Descricao' => $row_usuario['Descricao'],
-            'Solicitante' => $row_usuario['Solicitante'],
-            'Status_da_Demanda' => $row_usuario['Status_demanda_ID'],
-            'Tipo_da_Demanda' => $row_usuario['Tipo_demanda_ID'],
-            'Criticidade' => $row_usuario['Criticidade_ID'],
-            'Valor_da_Demanda' => formatarReaisParaNumero($row_usuario['Valor_demanda']),
-            'Data da Solicitação' => $row_usuario['Data_Solicitacao'],
-            'data_aprovacao' => $row_usuario['Data_Aprovacao'],
-            'previsao_termino' => $row_usuario['Previsao_Termino'],
-            'Coordenadoria' => $row_usuario['Coordenadoria_ID'],
-            'Projetos' => $row_usuario['Projetos_ID']
-        ];
-
-        // Atualizar o contato
-        updateContato($conn, $id, $data);
-    } else {
-        echo "Contato não encontrado.";
-    }
-
-    // Fechar a conexão com o banco de dados
-    $conn->close();
 }
 ?>
 
@@ -237,32 +248,12 @@ if ($_SERVER && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] 
         }
     </script>
 
-
-    <script>
-        // Função para permitir apenas letras, espaços e acentuações no campo "Nome"
-        function ApenasLetras(e) {
-            try {
-                var charCode = (typeof e.which === "undefined") ? e.keyCode : e.which;
-
-                // Permite letras, espaços e acentuações
-                if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode === 32 || (charCode >= 192 && charCode <= 255)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (err) {
-                alert(err.Description);
-            }
-        }
-    </script>
-
 </head>
 
 <body onload="redirecionarParaLogin()">
     <!-- Cabeçalho (Logotipo e Menu) -->
     <header>
         <div class="main mx-auto tabela-projetos">
-
             <div class="row">
                 <div class="col-md-2">
                     <div class="logo-container">
@@ -356,46 +347,80 @@ if ($_SERVER && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] 
         <div class="main tabela-projetos">
             <?php
             // Exibe a mensagem acima do título
-            if (isset($_GET['mensagem'])) {
-                echo '<div class="alert alert-success">' . htmlspecialchars($_GET['mensagem']) . '</div>';
+            if (!empty($mensagem)) {
+                echo '<div class="alert alert-success">' . htmlspecialchars($mensagem) . '</div>';
             }
             ?>
-            <h2>Inserir Demanda</h2>
-            <form action="../demandas/inserir_demanda.php" method="POST">
+            <h2>Inserir Projeto</h2>
+            <form action="../projetos/inserir_projeto.php" method="POST">
                 <div class="form-group">
-                    <label for="Numero_da_Demanda">Número da Demanda:</label>
-                    <input type="number" class="form-control" placeholder="Digite o Número da Demanda"
-                        id="Numero_da_Demanda" name="Numero_da_Demanda" required>
+                    <label for="Nome">Nome do Projeto:</label>
+                    <input type="text" class="form-control" placeholder="Digite o Nome do Projeto" id="Nome" name="Nome"
+                        required>
                 </div>
                 <div class="form-group">
-                    <label for="Numero_do_Contrato">Número do Contrato:</label>
-                    <input type="text" class="form-control" placeholder="Digite o Número do Contrato"
-                        id="Numero_do_Contrato" name="Numero_do_Contrato">
+                    <label for="Objetivo">Objetivo:</label>
+                    <input type="text" class="form-control" placeholder="Digite o Objetivo do Projeto" id="Objetivo"
+                        name="Objetivo" required>
                 </div>
                 <div class="form-group">
-                    <label for="Descricao">Descrição:</label>
-                    <input type="text" class="form-control" placeholder="Digite a Descrição da Demanda" id="Descricao"
-                        name="Descricao">
-                </div>
-                <div class="form-group">
-                    <label for="Projetos">Projetos:</label>
-                    <select class="form-control" id="Projetos" name="Projetos">
-                        <option value="">--- Selecione um Projeto ---</option>
+                    <label for="Situacao">Situação:</label>
+                    <select class="form-control" id="Situacao" name="Situacao" required>
+                        <option value="">--- Selecione uma Situação ---</option>
                         <?php
                         $conn = conectarBanco();
-                        buscarDadosProjetos($conn, "projetos", "Nome");
+                        buscarDadosSituacao($conn, "situacao", "Nome");
                         $conn->close();
                         ?>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="Solicitante">Solicitante:</label>
-                    <input type="text" class="form-control" placeholder="Digite o nome do Solicitante" id="Solicitante"
-                        name="Solicitante" onkeypress="return ApenasLetras(event,this);">
+                    <label for="Tipo_do_Projeto">Tipo do Projeto:</label>
+                    <select class="form-control" id="Tipo do Projeto" name="Tipo do Projeto" required>
+                        <option value="">--- Selecione um Tipo ---</option>
+                        <?php
+                        $conn = conectarBanco();
+                        buscarDadosTipoProjeto($conn, "tipo_projeto", "Nome");
+                        $conn->close();
+                        ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Subtipo_do_Projeto">Subtipo do Projeto:</label>
+                    <select class="form-control" id="Subtipo_do_Projeto" name="Subtipo_do_Projeto" required>
+                        <option value="">--- Selecione um Subtipo ---</option>
+                        <?php
+                        $conn = conectarBanco();
+                        buscarDadosSubtipoProjeto($conn, "subtipo_projeto", "Nome");
+                        $conn->close();
+                        ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Nivel_de_Prioridade">Nível de Prioridade:</label>
+                    <select class="form-control" id="Nivel_de_Prioridade" name="Nivel_de_Prioridade" required>
+                        <option value="">--- Selecione um Nível ---</option>
+                        <?php
+                        $conn = conectarBanco();
+                        buscarDadosNivelPrioridadeProjeto($conn, "nivel_prioridade_projeto", "Nome");
+                        $conn->close();
+                        ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Criticidade">Criticidade:</label>
+                    <select class="form-control" id="Criticidade" name="Criticidade" required>
+                        <option value="">--- Selecione uma Criticidade ---</option>
+                        <?php
+                        $conn = conectarBanco();
+                        buscarDadosCriticidade($conn, "criticidade", "Nome");
+                        $conn->close();
+                        ?>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="Coordenadoria">Coordenadoria:</label>
-                    <select class="form-control" id="Coordenadoria" name="Coordenadoria">
+                    <select class="form-control" id="Coordenadoria" name="Coordenadoria" required>
                         <option value="">--- Selecione uma Coordenadoria ---</option>
                         <?php
                         $conn = conectarBanco();
@@ -405,43 +430,18 @@ if ($_SERVER && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] 
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="Status_da_Demanda">Status da Demanda:</label>
-                    <select class="form-control" id="Status_da_Demanda" name="Status_da_Demanda">
-                        <option value="">--- Selecione um Status ---</option>
-                        <?php
-                        $conn = conectarBanco();
-                        buscarDadosStatusDemanda($conn, "status_demanda", "Nome");
-                        $conn->close();
-                        ?>
-                    </select>
+                    <label for="data_inicio">Data de Início:</label>
+                    <input type="date" class="form-control" id="data_inicio" name="data_inicio" required>
                 </div>
+                <div class="form-group">
+                    <label for="Prazo_Estimado">Prazo Estimado:</label>
+                    <input type="date" class="form-control" id="Prazo_Estimado" name="Prazo_Estimado">
+                </div>
+                <div class="form-group">
+                    <label for="Orcamento_Previsto">Orçamento Previsto:</label>
+                    <input type="text" class="form-control" id="Orcamento_Previsto" name="Orcamento_Previsto"
+                        oninput="formatarReais(this)">
 
-                <div class="form-group">
-                    <label for="Tipo_da_Demanda">Tipo de Demanda:</label>
-                    <select class="form-control" id="Tipo_da_Demanda" name="Tipo_da_Demanda">
-                        <option value="">--- Selecione um tipo ---</option>
-                        <?php
-                        $conn = conectarBanco();
-                        buscarDadosTipoDemanda($conn, "tipo_demanda", "Nome");
-                        $conn->close();
-                        ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="Criticidade">Criticidade:</label>
-                    <select class="form-control" id="Criticidade" name="Criticidade">
-                        <option value="">--- Selecione um tipo ---</option>
-                        <?php
-                        $conn = conectarBanco();
-                        buscarDadosCriticidade($conn, "criticidade", "Nome");
-                        $conn->close();
-                        ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="Valor_da_Demanda">Valor da Demanda (R$):</label>
-                    <input type="text" class="form-control" id="Valor_da_Demanda" name="Valor_da_Demanda"
-                        oninput="formatarReais(this)" required>
                     <script>
                         function formatarReais(input) {
                             // Remove caracteres não numéricos
@@ -463,20 +463,38 @@ if ($_SERVER && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] 
                     </script>
                 </div>
                 <div class="form-group">
-                    <label for="Data_Solicitacao">Data da Solicitação:</label>
-                    <input type="date" class="form-control" id="Data_Solicitacao" name="Data_Solicitacao">
+                    <label for="Gerente_do_Projeto">Gerente do Projeto:
+                        <a href="../gerente/inserir_gerente.php" class="btn btn-secondary">
+                            Não encontrou o gerente? Insira um novo gerente
+                        </a>
+                    </label>
+
+                    <select class="form-control" id="Gerente_do_Projeto" name="Gerente_do_Projeto" required>
+                        <option value="">--- Selecione um Gerente ---</option>
+                        <?php
+                        $conn = conectarBanco();
+                        buscarDadosGerente($conn, "gerente_projeto", "Nome");
+                        $conn->close();
+                        ?>
+                    </select>
                 </div>
+
                 <div class="form-group">
-                    <label for="data_aprovacao">Data da Aprovação:</label>
-                    <input type="date" class="form-control" id="data_aprovacao" name="data_aprovacao">
+                    <label for="Gerente_do_Projeto">Contato Técnico:</label>
+
+                    <select class="form-control" id="Contatos_Tecnicos" name="Contatos_Tecnicos" required>
+                        <option value="">--- Selecione um Contato ---</option>
+                        <?php
+                        $conn = conectarBanco();
+                        buscarDadosContatos($conn, "contatos_tecnicos", "Nome");
+                        $conn->close();
+                        ?>
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label for="previsao_termino">Previsão de Término:</label>
-                    <input type="date" class="form-control" id="previsao_termino" name="previsao_termino">
-                </div>
-                <!-- Botão "Inserir Demanda" com ícone -->
+
+                <!-- Botão "Inserir Contato" com ícone -->
                 <button type="submit" name="submit_inserir" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Inserir Demanda
+                    <i class="fas fa-plus"></i> Inserir Projeto
                 </button>
 
                 <!-- Botão "Editar" com ícone -->
@@ -493,30 +511,29 @@ if ($_SERVER && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] 
 
                     // Função para limpar os campos do formulário
                     function limparCampos() {
-                        document.getElementById('Numero_da_Demanda').value = ''; // Limpa o campo "Número da Demanda"
-                        document.getElementById('Numero_do_Contrato').value = ''; // Limpa o campo "Número do Contrato"
-                        document.getElementById('Descricao').value = ''; // Limpa o campo "Descrição"
-                        document.getElementById('Projetos').value = ''; // Limpa o campo "Projetos"
-                        document.getElementById('Solicitante').value = ''; // Limpa o campo "Solicitante"
-                        document.getElementById('Coordenadoria').value = ''; // Limpa o campo "Coordenadoria"
-                        document.getElementById('Status_da_Demanda').value = ''; // Limpa o campo "Status da Demanda"
-                        document.getElementById('Tipo_da_Demanda').value = ''; // Limpa o campo "Tipo da Demanda"
-                        document.getElementById('Criticidade').value = ''; // Limpa o campo "Criticidade"
-                        document.getElementById('Valor_da_Demanda').value = ''; // Limpa o campo "Valor da Demanda"
-                        document.getElementById('Data_Solicitacao').value = ''; // Limpa o campo "Data da Solicitação"
-                        document.getElementById('data_aprovacao').value = ''; // Limpa o campo "Data de Aprovação"
-                        document.getElementById('previsao_termino').value = ''; // Limpa o campo "Previsão de Término"
+                        document.getElementById('Nome').value = ''; // Limpa o campo "Nome do Projeto"
+                        document.getElementById('Objetivo').value = ''; // Limpa o campo "Objetivo"
+                        document.getElementById('Situacao').selectedIndex = 0; // Reseta o campo "Situação"
+                        document.getElementById('Tipo do Projeto').selectedIndex = 0; // Reseta o campo "Tipo do Projeto"
+                        document.getElementById('Subtipo_do_Projeto').selectedIndex = 0; // Reseta o campo "Subtipo do Projeto"
+                        document.getElementById('Nivel_de_Prioridade').selectedIndex = 0; // Reseta o campo "Nível de Prioridade"
+                        document.getElementById('Criticidade').selectedIndex = 0; // Reseta o campo "Criticidade"
+                        document.getElementById('Coordenadoria').selectedIndex = 0; // Reseta o campo "Coordenadoria"
+                        document.getElementById('data_inicio').value = ''; // Limpa o campo "Data de Início"
+                        document.getElementById('Prazo_Estimado').value = ''; // Limpa o campo "Prazo Estimado"
+                        document.getElementById('Orcamento_Previsto').value = ''; // Limpa o campo "Orçamento Previsto"
+                        document.getElementById('Gerente_do_Projeto').selectedIndex = 0; // Reseta o campo "Gerente do Projeto"
+                        document.getElementById('Contatos_Tecnicos').value = ''; // Limpa o campo "Contatos Tecnicos"
                     }
                 </script>
 
-            </form>
+                <p>
         </div>
     </div>
-    <p>
-        <!-- Rodapé -->
+    <!-- Rodapé -->
     <footer>
         <!-- Rodapé com imagem -->
-        <div class="container">
+        <div class="container main">
             <img src="..\imagem\rodape_preto.png" alt="Rodapé" />
         </div>
     </footer>

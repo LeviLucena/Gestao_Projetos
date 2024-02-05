@@ -12,9 +12,6 @@ if (!isset($_SESSION['usuario'])) {
 include_once("../config/conexao.php");
 
 // Adicione a instrução SET NAMES 'utf8'; para garantir a codificação correta
-mysqli_query($conn, "SET NAMES 'utf8';");
-
-// Adicione a instrução SET NAMES 'utf8'; para garantir a codificação correta
 //mysqli_query($conn, "SET NAMES 'utf8';");
 
 // Atualiza o último acesso
@@ -46,42 +43,47 @@ if (isset($_GET['mensagem'])) {
     //echo '<div class="alert alert-success">' . htmlspecialchars//($_GET['mensagem']) . '</div>';
 }
 
-// Função para buscar dados do banco de dados Gerente
-function buscarDadosGerente($conn, $table, $field)
+// Função para buscar dados do banco de dados Usuários
+function buscarDadosUsuarios($conn)
 {
-    $sql = "SELECT ID, Nome FROM $table";
+    $sql = "SELECT id, nome, senha, permissao_admin, permissao_editar, permissao_excluir FROM usuarios";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo '<tr>';
-            echo '<td>' . $row['ID'] . '</td>';
-            echo '<td>' . $row['Nome'] . '</td>';
-            echo '<td><button class="btn btn-primary btn-visualizar" data-id="' . $row['ID'] . '">Visualizar</button></td>';
+            echo '<td>' . $row['id'] . '</td>';
+            echo '<td>' . $row['nome'] . '</td>';
+            echo '<td>' . $row['senha'] . '</td>';
+            echo '<td>' . $row['permissao_admin'] . '</td>';
+            echo '<td>' . $row['permissao_editar'] . '</td>';
+            echo '<td>' . $row['permissao_excluir'] . '</td>';
+            // Adicione outras colunas conforme necessário
+            echo '<td><button class="btn btn-primary btn-visualizar" data-id="' . $row['id'] . '">Visualizar</button></td>';
             echo '</tr>';
         }
     } else {
-        echo '<tr><td colspan="3">Nenhum registro encontrado</td></tr>';
+        echo '<tr><td colspan="7">Nenhum registro encontrado</td></tr>';
     }
 }
 
 // Função para inserir um novo gerente
-function inserirGerente($conn, $data)
+function inserirUsuario($conn, $data)
 {
-    $query = "INSERT INTO gerente_projeto (Nome) VALUES (?)";
+    $query = "INSERT INTO usuarios (Nome, Senha, Permissao_Admin, Permissao_Editar, Permissao_Excluir) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
 
     // Bind parameters
-    $stmt->bind_param("s", $data['Nome']);
+    $stmt->bind_param("ssiii", $data['Nome'], $data['Senha'], $data['PermissaoAdmin'], $data['PermissaoEditar'], $data['PermissaoExcluir']);
 
     // Execute statement
     $stmt->execute();
 
     // Check for errors
     if ($stmt->errno) {
-        echo "Erro ao inserir gerente: " . $stmt->error;
+        echo "Erro ao inserir usuário: " . $stmt->error;
     } else {
         // Redireciona para a página de consulta após a inserção
-        header("Location: inserir_gerente.php?mensagem=Gerente inserido com sucesso!");
+        header("Location: inserir_usuario.php?mensagem=Usuario inserido com sucesso!");
         exit(); // Certifica-se de que o script seja encerrado após o redirecionamento
     }
 
@@ -93,11 +95,16 @@ function inserirGerente($conn, $data)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inserir'])) {
     // Obter os dados do formulário
     $data = [
-        'Nome' => filter_input(INPUT_POST, 'Nome', FILTER_SANITIZE_STRING),
+        'Nome' => filter_input(INPUT_POST, 'Nome', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+        'Senha' => filter_input(INPUT_POST, 'Senha', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+        'PermissaoAdmin' => filter_input(INPUT_POST, 'PermissaoAdmin', FILTER_SANITIZE_NUMBER_INT),
+        'PermissaoEditar' => filter_input(INPUT_POST, 'PermissaoEditar', FILTER_SANITIZE_NUMBER_INT),
+        'PermissaoExcluir' => filter_input(INPUT_POST, 'PermissaoExcluir', FILTER_SANITIZE_NUMBER_INT),
+        // Adicione outras colunas conforme necessário
     ];
 
-    // Inserir o novo gerente
-    inserirGerente(conectarBanco(), $data);
+    // Inserir o novo usuário
+    inserirUsuario(conectarBanco(), $data);
 }
 ?>
 
@@ -256,18 +263,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inserir'])) {
                 echo '<div class="alert alert-success">' . htmlspecialchars($_GET['mensagem']) . '</div>';
             }
             ?>
-            <h2>Inserir Gerente</h2>
-            <form action="../gerente/inserir_gerente.php" method="POST">
+            <h2>Inserir Usuário</h2>
+            <form action="../usuarios/inserir_usuario.php" method="POST">
                 <div class="form-group">
                     <label for="Nome">Nome:</label>
-                    <input type="text" class="form-control" placeholder="Digite o Nome do Gerente" id="Nome" name="Nome"
+                    <input type="text" class="form-control" placeholder="Digite o Nome do Usuário" id="Nome" name="Nome"
                         onkeypress="return ApenasLetras(event,this);" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="Senha">Senha:</label>
+                    <input type="password" class="form-control" placeholder="Digite a Senha Criptografada" id="Senha"
+                        name="Senha" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="PermissaoAdmin">Admin:</label>
+                    <input type="text" class="form-control" placeholder="Digite sim ou não para a permissão"
+                        id="PermissaoAdmin" name="PermissaoAdmin" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="PermissaoEditar">Editar:</label>
+                    <input type="text" class="form-control" placeholder="Digite sim ou não para a permissão"
+                        id="PermissaoEditar" name="PermissaoEditar" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="PermissaoExcluir">Excluir:</label>
+                    <input type="text" class="form-control" placeholder="Digite sim ou não para a permissão"
+                        id="PermissaoExcluir" name="PermissaoExcluir" required>
                 </div>
 
 
                 <!-- Botão "Inserir Gerente" -->
                 <button type="submit" name="submit_inserir" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Inserir Gerente
+                    <i class="fas fa-plus"></i> Inserir Usuário
                 </button>
 
                 <!-- Botão "Editar" com ícone -->
@@ -286,25 +317,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inserir'])) {
                         // Função para limpar os campos do formulário
                         function limparCampos() {
                             document.getElementById('Nome').value = ''; // Limpa o campo "Nome"
-
+                            document.getElementById('Senha').value = ''; // Limpa o campo "Senha"
+                            document.getElementById('PermissaoAdmin').value = ''; // Limpa o campo "Admin"
+                            document.getElementById('PermissaoEditar').value = ''; // Limpa o campo "Editar"
+                            document.getElementById('PermissaoExcluir').value = ''; // Limpa o campo "Excluir"
                         }
                     </script>
             </form>
 
             <!-- Tabela de Gerentes -->
-            <h2>Tabela de Gerentes</h2>
-            <table id="tabela-gerentes" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <h2>Tabela de Usuários</h2>
+            <table id="tabela-usuario" class="table table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
+                        <th>Senha</th>
+                        <th>Admin</th>
+                        <th>Editar</th>
+                        <th>Excluir</th>
                         <th>Ações</th> <!-- Nova coluna para o botão "Visualizar" -->
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     // Buscar dados de gerentes usando a função
-                    buscarDadosGerente(conectarBanco(), "gerente_projeto", "Nome");
+                    buscarDadosUsuarios(conectarBanco());
                     ?>
                 </tbody>
             </table>
@@ -328,15 +366,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inserir'])) {
     <script>
         $(document).ready(function () {
             // Inicializa o DataTables para a tabela de gerentes
-            $('#tabela-gerentes').DataTable();
+            $('#tabela-usuario').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese.json"
+                }
+            });
 
             // Adiciona um ouvinte de evento para os botões "Visualizar"
             $('.btn-visualizar').on('click', function () {
                 // Obtém o ID do contato da linha da tabela
-                var gerenteID = $(this).data('id');
+                var usuarioID = $(this).data('id');
 
                 // Redireciona para a página de visualização com o ID
-                window.location.href = '../gerente/editar_gerente.php?id=' + gerenteID;
+                window.location.href = '../usuarios/editar_usuario.php?id=' + usuarioID;
             });
         });
     </script>

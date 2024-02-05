@@ -21,8 +21,8 @@ mysqli_query($conn, "SET NAMES 'utf8';");
 
 // Construa a consulta SQL com base na soma do orçamento previsto por situação
 $sqlOrcamento = "SELECT s.Nome as situacao, SUM(p.orcamento_previsto) as total_orcamento
-                FROM gestao.projetos p
-                JOIN gestao.situacao s ON p.situacao_ID = s.ID
+                FROM gestão.projetos p
+                JOIN gestão.situacao s ON p.situacao_ID = s.ID
                 GROUP BY p.situacao_ID";
 
 // Execute a consulta SQL
@@ -47,8 +47,8 @@ if ($resultOrcamento) {
 
 // Construa a consulta SQL com base na soma do orçamento previsto por tipo de projeto
 $sqlTipoProjeto = "SELECT tp.Nome as tipo_projeto, SUM(p.orcamento_previsto) as total_orcamento
-                  FROM gestao.projetos p
-                  JOIN gestao.tipo_projeto tp ON p.tipo_projeto_ID = tp.ID
+                  FROM gestão.projetos p
+                  JOIN gestão.tipo_projeto tp ON p.tipo_projeto_ID = tp.ID
                   GROUP BY p.tipo_projeto_ID";
 
 // Execute a consulta SQL
@@ -73,8 +73,8 @@ if ($resultTipoProjeto) {
 
 // Construa a consulta SQL com base na soma do orçamento previsto por subtipo de projeto
 $sqlSubtipoProjeto = "SELECT stp.Nome as subtipo_projeto, SUM(p.orcamento_previsto) as total_orcamento
-                      FROM gestao.projetos p
-                      JOIN gestao.subtipo_projeto stp ON p.subtipo_projeto_ID = stp.ID
+                      FROM gestão.projetos p
+                      JOIN gestão.subtipo_projeto stp ON p.subtipo_projeto_ID = stp.ID
                       GROUP BY p.subtipo_projeto_ID";
 
 // Execute a consulta SQL
@@ -99,8 +99,8 @@ if ($resultSubtipoProjeto) {
 
 // Construa a consulta SQL com base na soma do orçamento previsto por nível de prioridade
 $sqlNivelPrioridade = "SELECT np.Nome as nivel_prioridade_projeto, SUM(p.orcamento_previsto) as total_orcamento
-                      FROM gestao.projetos p
-                      JOIN gestao.nivel_prioridade_projeto np ON p.nivel_prioridade_projeto_ID = np.ID
+                      FROM gestão.projetos p
+                      JOIN gestão.nivel_prioridade_projeto np ON p.nivel_prioridade_projeto_ID = np.ID
                       GROUP BY p.nivel_prioridade_projeto_ID";
 
 // Execute a consulta SQL
@@ -125,8 +125,8 @@ if ($resultNivelPrioridade) {
 
 // Construa a consulta SQL com base na soma do orçamento previsto por gerente de projeto
 $sqlGerenteProjeto = "SELECT gp.Nome as gerente_projeto, SUM(p.orcamento_previsto) as total_orcamento
-                     FROM gestao.projetos p
-                     JOIN gestao.gerente_projeto gp ON p.gerente_projeto_ID = gp.ID
+                     FROM gestão.projetos p
+                     JOIN gestão.gerente_projeto gp ON p.gerente_projeto_ID = gp.ID
                      GROUP BY p.gerente_projeto_ID";
 
 // Execute a consulta SQL
@@ -151,8 +151,8 @@ if ($resultGerenteProjeto) {
 
 // Construa a consulta SQL com base na soma do orçamento previsto por coordenadoria
 $sqlCoordenadoria = "SELECT c.Nome as coordenadoria, SUM(p.orcamento_previsto) as total_orcamento
-                    FROM gestao.projetos p
-                    JOIN gestao.coordenadoria c ON p.coordenadoria_ID = c.ID
+                    FROM gestão.projetos p
+                    JOIN gestão.coordenadoria c ON p.coordenadoria_ID = c.ID
                     GROUP BY p.coordenadoria_ID";
 
 // Execute a consulta SQL
@@ -314,7 +314,7 @@ if ($resultCoordenadoria) {
         }
     </script>
 
-    <!-- Script para o gráfico de colunas do orçamento por coordenadoria -->
+    <!-- Script para o gráfico de barras horizontais do orçamento por coordenadoria -->
     <script>
         google.charts.load('current', { 'packages': ['corechart'] });
         google.charts.setOnLoadCallback(drawChartCoordenadoria);
@@ -324,12 +324,12 @@ if ($resultCoordenadoria) {
 
             var optionsCoordenadoria = {
                 title: 'Total de Orçamento por Coordenadoria',
-                bars: 'vertical',
-                vAxis: { format: 'currency' },
+                bars: 'horizontal', // Alterado para barras horizontais
+                hAxis: { format: 'currency' }, // Modificado para hAxis (eixo horizontal)
                 height: 300
             };
 
-            var chartCoordenadoria = new google.visualization.ColumnChart(document.getElementById('columnchartCoordenadoria'));
+            var chartCoordenadoria = new google.visualization.BarChart(document.getElementById('columnchartCoordenadoria'));
 
             chartCoordenadoria.draw(dataCoordenadoria, optionsCoordenadoria);
         }

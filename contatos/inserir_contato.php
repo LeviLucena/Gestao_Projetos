@@ -12,10 +12,10 @@ if (!isset($_SESSION['usuario'])) {
 // Função para conectar ao banco de dados
 function conectarBanco()
 {
-    $servername = "172.17.0.55";
-    $username = "usu_gestao";
-    $password = "gst_db_user26g1";
-    $dbname = "gestao";
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "gestão";
     $conn = new mysqli($servername, $username, $password, $dbname);
     if ($conn->connect_error) {
         die("Erro na conexão com o banco de dados: " . $conn->connect_error);

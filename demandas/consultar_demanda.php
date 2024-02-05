@@ -243,10 +243,10 @@ function buscarDadosDemanda($conn)
         $(document).ready(function () {
             // Inicializa o DataTables para a tabela de projetos
             var table = $('#demandas-table').DataTable({
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese.json"
-                    }
-                });
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese.json"
+                }
+            });
 
             // Adiciona um ouvinte de evento para os botões "Visualizar"
             $('#demandas-table').on('click', '.btn-visualizar', function () {

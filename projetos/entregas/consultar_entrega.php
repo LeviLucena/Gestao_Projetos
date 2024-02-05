@@ -279,10 +279,10 @@ function buscarDadosEntregas($conn, $projetoID)
         $(document).ready(function () {
             // Inicializa o DataTables para a tabela de entregas
             $('#entregas-table').DataTable({
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese.json"
-                    }
-                });
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese.json"
+                }
+            });
         });
     </script>
 

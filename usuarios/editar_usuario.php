@@ -14,107 +14,104 @@ include_once("../config/conexao.php");
 // Adicione a instrução SET NAMES 'utf8'; para garantir a codificação correta
 mysqli_query($conn, "SET NAMES 'utf8';");
 
-// Adicione a instrução SET NAMES 'utf8'; para garantir a codificação correta
-//mysqli_query($conn, "SET NAMES 'utf8';");
-
 // Atualiza o último acesso
 $_SESSION['ultimo_acesso'] = time();
-
-// Função para conectar ao banco de dados
-function conectarBanco()
-{
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "gestão";
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    if ($conn->connect_error) {
-        die("Erro na conexão com o banco de dados: " . $conn->connect_error);
-    }
-
-    // Define o conjunto de caracteres
-    mysqli_set_charset($conn, "utf8");
-
-    return $conn;
-}
-
-// Adicione a instrução SET NAMES 'utf8'; para garantir a codificação correta
-mysqli_query($conn, "SET NAMES 'utf8';");
 
 // Se houver uma mensagem na URL, exiba-a
 if (isset($_GET['mensagem'])) {
     //echo '<div class="alert alert-success">' . htmlspecialchars//($_GET['mensagem']) . '</div>';
 }
 
-// Função para buscar dados do banco de dados Gerente
-function buscarDadosGerente($conn, $table, $field)
+// Obtém o ID do contato da URL
+$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+
+// Processar a atualização do contato quando o formulário é enviado via POST
+if ($_SERVER && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Obter os dados do formulário
+    $data = [
+        'ID' => filter_input(INPUT_POST, 'ID', FILTER_SANITIZE_NUMBER_INT),
+        'Nome' => filter_input(INPUT_POST, 'Nome', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+        'Senha' => filter_input(INPUT_POST, 'Senha', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+        'PermissaoAdmin' => filter_input(INPUT_POST, 'PermissaoAdmin', FILTER_SANITIZE_NUMBER_INT),
+        'PermissaoEditar' => filter_input(INPUT_POST, 'PermissaoEditar', FILTER_SANITIZE_NUMBER_INT),
+        'PermissaoExcluir' => filter_input(INPUT_POST, 'PermissaoExcluir', FILTER_SANITIZE_NUMBER_INT),
+    ];
+
+    // Atualizar o contato
+    updateContato($conn, $data['ID'], $data);
+}
+
+// Consulta o banco de dados para obter os dados do contato pelo ID
+$result_usuario = "SELECT * FROM usuarios WHERE ID = '$id'";
+$resultado_usuario = mysqli_query($conn, $result_usuario);
+$row_usuario = mysqli_fetch_assoc($resultado_usuario);
+
+// Função para buscar dados do banco de dados dos usuários
+function buscarDadosUsuarios($conn, $table, $field, $selectedValue)
 {
-    $sql = "SELECT ID, Nome FROM $table";
+    $table = 'usuarios';
+    $dados = [];
+    $sql = "SELECT ID, Nome, Senha, PermissaoAdmin, PermissaoEditar, PermissaoExcluir FROM $table";
     $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
+
+    if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo '<tr>';
-            echo '<td>' . $row['ID'] . '</td>';
-            echo '<td>' . $row['Nome'] . '</td>';
-            echo '<td><button class="btn btn-primary btn-visualizar" data-id="' . $row['ID'] . '">Visualizar</button></td>';
-            echo '</tr>';
+            $selected = ($selectedValue == $row["ID"] || $selectedValue == $row["Nome"] || $selectedValue == $row["Senha"] || $selectedValue == $row["PermissaoAdmin"] || $selectedValue == $row["PermissaoEditar"] || $selectedValue == $row["PermissaoExcluir"]) ? 'selected' : '';
+            echo '<option value="' . $row["ID"] . '" ' . $selected . '>';
+            echo 'ID: ' . $row["ID"] . ', Nome: ' . $row["Nome"] . ', Senha: ' . $row["Senha"] . ', PermissaoAdmin: ' . $row["PermissaoAdmin"] . ', PermissaoEditar: ' . $row["PermissaoEditar"] . ', PermissaoExcluir: ' . $row["PermissaoExcluir"];
+            echo '</option>';
         }
     } else {
-        echo '<tr><td colspan="3">Nenhum registro encontrado</td></tr>';
+        echo '<option value="">Nenhum registro encontrado</option>';
+    }
+}
+// Buscar dados do gerente pelo ID
+function getContatoById($conn, $id)
+{
+    $sql = "SELECT * FROM usuarios WHERE ID = '$id'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        return $result->fetch_assoc();
+    } else {
+        return null;
     }
 }
 
-// Função para inserir um novo gerente
-function inserirGerente($conn, $data)
+function updateContato($conn, $id, $data)
 {
-    $query = "INSERT INTO gerente_projeto (Nome) VALUES (?)";
+    $query = "UPDATE usuarios SET Nome = ?, Senha = ?, PermissaoAdmin = ?, PermissaoEditar = ?, PermissaoExcluir = ? WHERE ID = ?";
     $stmt = $conn->prepare($query);
 
     // Bind parameters
-    $stmt->bind_param("s", $data['Nome']);
+    $stmt->bind_param("ssiii", $data['Nome'], $data['Senha'], $data['PermissaoAdmin'], $data['PermissaoEditar'], $data['PermissaoExcluir'], $id);
 
     // Execute statement
     $stmt->execute();
 
     // Check for errors
     if ($stmt->errno) {
-        echo "Erro ao inserir gerente: " . $stmt->error;
+        echo "Erro ao atualizar usuário: " . $stmt->error;
     } else {
-        // Redireciona para a página de consulta após a inserção
-        header("Location: inserir_gerente.php?mensagem=Gerente inserido com sucesso!");
+        // Redireciona para a página de edição após a atualização
+        header("Location: ../usuarios/editar_usuario.php?id=" . $id . "&mensagem=Usuário atualizado com sucesso!");
         exit(); // Certifica-se de que o script seja encerrado após o redirecionamento
     }
 
     // Close statement
     $stmt->close();
 }
-
-// Processar o formulário quando enviado
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inserir'])) {
-    // Obter os dados do formulário
-    $data = [
-        'Nome' => filter_input(INPUT_POST, 'Nome', FILTER_SANITIZE_STRING),
-    ];
-
-    // Inserir o novo gerente
-    inserirGerente(conectarBanco(), $data);
-}
 ?>
 
-<!DOCTYPE html>
-<!-- Desenvolvido por Levi Lucena - https://www.linkedin.com/in/levilucena/ -->
-<html>
-
 <head>
+    <!-- Desenvolvido por Levi Lucena - https://www.linkedin.com/in/levilucena/ -->
     <title>Gerenciamento de Projetos</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Adicione esta biblioteca para facilitar a formatação do telefone -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
-    <!-- Link para o CSS do Bootstrap 3 -->
+    <!-- Adicione os arquivos CSS do Bootstrap e DataTables -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- Link para o CSS da página -->
@@ -132,24 +129,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inserir'])) {
                 alert("Sua sessão expirou. Você será redirecionado para a página de login.");
                 window.location.href = "../login.php"; // Redireciona para a página de login
             }, 1800000); // 1800000 milissegundos = 30 minutos (ajuste conforme necessário)
-        }
-    </script>
-
-    <script>
-        // Função para permitir apenas letras, espaços e acentuações no campo "Nome"
-        function ApenasLetras(e) {
-            try {
-                var charCode = (typeof e.which === "undefined") ? e.keyCode : e.which;
-
-                // Permite letras, espaços e acentuações
-                if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode === 32 || (charCode >= 192 && charCode <= 255)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (err) {
-                alert(err.Description);
-            }
         }
     </script>
 
@@ -256,27 +235,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inserir'])) {
                 echo '<div class="alert alert-success">' . htmlspecialchars($_GET['mensagem']) . '</div>';
             }
             ?>
-            <h2>Inserir Gerente</h2>
-            <form action="../gerente/inserir_gerente.php" method="POST">
+            <h2>Editar Usuário</h2>
+            <form action="../usuarios/editar_usuario.php" method="POST">
                 <div class="form-group">
+                    <!-- Adicione um campo oculto para armazenar o ID do contato -->
+                    <input type="hidden" name="ID" value="<?php echo $row_usuario['id']; ?>">
                     <label for="Nome">Nome:</label>
-                    <input type="text" class="form-control" placeholder="Digite o Nome do Gerente" id="Nome" name="Nome"
-                        onkeypress="return ApenasLetras(event,this);" required>
+                    <input type="text" class="form-control" placeholder="Digite o Nome do Usuário" id="Nome" name="Nome"
+                        onkeypress="return ApenasLetras(event,this);" required
+                        value="<?php echo isset($row_usuario['Nome']) ? htmlspecialchars($row_usuario['Nome']) : ''; ?>">
                 </div>
 
+                <div class="form-group">
+                    <label for="Senha">Senha:</label>
+                    <input type="password" class="form-control" placeholder="Digite a Senha Criptografada" id="Senha"
+                        name="Senha" required value="<?php echo isset($row_usuario['Senha']) ?>">
+                </div>
 
-                <!-- Botão "Inserir Gerente" -->
-                <button type="submit" name="submit_inserir" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Inserir Gerente
-                </button>
+                <div class="form-group">
+                    <label for="PermissaoAdmin">Admin:</label>
+                    <input type="text" class="form-control" placeholder="Digite o tipo de Permissão" id="PermissaoAdmin"
+                        name="PermissaoAdmin" required>
+                </div>
 
-                <!-- Botão "Editar" com ícone -->
-                <button type="button" class="btn btn-warning" id="btn-limpar">
-                    <i class="fas fa-eraser"></i> Limpar
-                </button>
+                <div class="form-group">
+                    <label for="PermissaoEditar">Editar:</label>
+                    <input type="text" class="form-control" placeholder="Digite o tipo de Permissão"
+                        id="PermissaoEditar" name="PermissaoEditar" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="PermissaoExcluir">Excluir:</label>
+                    <input type="text" class="form-control" placeholder="Digite o tipo de Permissão"
+                        id="PermissaoExcluir" name="PermissaoExcluir" required>
+                </div>
+
                 <p>
+                <p>
+                    <!-- Botão " Salvar" com ícone -->
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Atualizar
+                    </button>
 
-                    <!-- Adicione um evento de clique ao botão "Editar" -->
+                    <!-- Botão "Editar" com ícone -->
+                    <button type="button" class="btn btn-warning" id="btn-limpar">
+                        <i class="fas fa-eraser"></i> Limpar
+                    </button>
+
+                    <!-- Botão "Cancelar" com ícone -->
+                    <button type="button" class="btn btn-danger" id="btn-cancelar">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+
+                    <script>
+                        // Adiciona um evento de clique ao botão "Cancelar"
+                        document.getElementById('btn-cancelar').addEventListener('click', function () {
+                            // Redireciona para a página "consultar_contato.php"
+                            window.location.href = '../usuarios/inserir_usuario.php';
+                        });
+                    </script>
+
+                    <!-- Adicione um evento de clique ao botão "Limpar" -->
                     <script>
                         document.getElementById('btn-limpar').addEventListener('click', function () {
                             // Chame a função para limpar os campos
@@ -286,31 +305,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inserir'])) {
                         // Função para limpar os campos do formulário
                         function limparCampos() {
                             document.getElementById('Nome').value = ''; // Limpa o campo "Nome"
-
+                            document.getElementById('Senha').value = ''; // Limpa o campo "Telefone"
+                            document.getElementById('PermissaoAdmin').value = ''; // Limpa o campo "E-mail"
+                            document.getElementById('PermissaoEditar').value = ''; // Limpa o campo "Coordenadoria"
+                            document.getElementById('PermissaoExcluir').value = ''; // Limpa o campo "Tipo de Contato"
                         }
                     </script>
             </form>
-
-            <!-- Tabela de Gerentes -->
-            <h2>Tabela de Gerentes</h2>
-            <table id="tabela-gerentes" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Ações</th> <!-- Nova coluna para o botão "Visualizar" -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    // Buscar dados de gerentes usando a função
-                    buscarDadosGerente(conectarBanco(), "gerente_projeto", "Nome");
-                    ?>
-                </tbody>
-            </table>
         </div>
     </div>
-
     <!-- Rodapé -->
     <footer>
         <!-- Rodapé com imagem -->
@@ -327,19 +330,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_inserir'])) {
 
     <script>
         $(document).ready(function () {
-            // Inicializa o DataTables para a tabela de gerentes
-            $('#tabela-gerentes').DataTable();
+            // Inicializa o DataTables para a tabela de projetos
+            $('#usuarios-table').DataTable();
 
             // Adiciona um ouvinte de evento para os botões "Visualizar"
             $('.btn-visualizar').on('click', function () {
                 // Obtém o ID do contato da linha da tabela
-                var gerenteID = $(this).data('id');
+                var usuarioID = $(this).data('id');
 
                 // Redireciona para a página de visualização com o ID
-                window.location.href = '../gerente/editar_gerente.php?id=' + gerenteID;
+                window.location.href = '../usuarios/editar_usuario.php?id=' + usuarioID;
             });
         });
     </script>
-</body>
 
-</html>
+</body>
+</body>

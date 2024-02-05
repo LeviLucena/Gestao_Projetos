@@ -14,18 +14,31 @@ include_once("../config/conexao.php");
 // Adicione a instrução SET NAMES 'utf8'; para garantir a codificação correta
 mysqli_query($conn, "SET NAMES 'utf8';");
 
-// Atualiza o último acesso
-$_SESSION['ultimo_acesso'] = time();
+// Função para conectar ao banco de dados
+//function conectarBanco()
+//{
+//    $conn = new mysqli($servername, $username, $password, $dbname);
+//    if ($conn->connect_error) {
+//        die("Erro na conexão com o banco de dados: " . $conn->connect_error);
+//    }
+//    return $conn;
+//}
 
-// Função para buscar dados da tabela "contatos_tecnicos" com nomes correspondentes
-function buscarDadosContatos($conn)
+// Função para buscar dados da tabela "projetos" com nomes correspondentes
+function buscarDadosProjetos($conn)
 {
-    $sql = "SELECT ct.ID, ct.Nome, ct.Telefone, ct.Email, 
-            coord.Nome as NomeCoordenadoria,
-            tc.Nome as NomeTipoContato
-            FROM contatos_tecnicos ct
-            LEFT JOIN coordenadoria coord ON ct.Coordenadorias_ID = coord.ID
-            LEFT JOIN tipos_contatos tc ON ct.Tipos_Contatos_ID = tc.ID";
+    $sql = "SELECT p.ID, p.Nome, p.Objetivo, 
+            DATE_FORMAT(p.Data_Inicio, '%d/%m/%Y') as Data_Inicio,
+            DATE_FORMAT(p.Prazo_Estimado, '%d/%m/%Y') as Prazo_Estimado,
+            s.Nome as NomeSituacao, tp.Nome as NomeTipoProjeto,
+            np.Nome as NomeNivelPrioridade, coord.Nome as NomeCoordenadoria,
+            gp.Nome as NomeGerenteProjeto, FORMAT(p.Orcamento_Previsto, 2, 'de_DE') as Orcamento_Previsto
+            FROM projetos p
+            LEFT JOIN situacao s ON p.Situacao_ID = s.ID
+            LEFT JOIN tipo_projeto tp ON p.Tipo_Projeto_ID = tp.ID
+            LEFT JOIN nivel_prioridade_projeto np ON p.Nivel_Prioridade_Projeto_ID = np.ID
+            LEFT JOIN coordenadoria coord ON p.Coordenadoria_ID = coord.ID
+            LEFT JOIN gerente_projeto gp ON p.Gerente_Projeto_ID = gp.ID";
 
     $resultado = $conn->query($sql);
     $dados = [];
@@ -38,11 +51,13 @@ function buscarDadosContatos($conn)
 
     return $dados;
 }
-
 ?>
 
+<!DOCTYPE html>
+<html lang="pt-br">
+<!-- Desenvolvido por Levi Lucena - https://www.linkedin.com/in/levilucena/ -->
+
 <head>
-    <!-- Desenvolvido por Levi Lucena - https://www.linkedin.com/in/levilucena/ -->
     <title>Gerenciamento de Projetos</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,6 +101,7 @@ function buscarDadosContatos($conn)
                     <nav class="navbar">
                         <ul class="nav navbar-nav">
                             <li><a href="../index.php"><i class="fas fa-home"></i>Página Inicial</a></li>
+
                             <li>
                                 <a href="#">
                                     <i class="fas fa-tasks"></i>Projetos
@@ -163,62 +179,69 @@ function buscarDadosContatos($conn)
         </div>
     </header>
 
-
     <div class="container main">
         <!-- Conteúdo principal -->
-        <h2 class="main mx-auto tabela-projetos">Lista de Contatos</h2>
+        <h2 class="main mx-auto tabela-projetos">Lista de Projetos</h2>
         <p>
-
         <div class="main mx-auto tabela-projetos">
-            <table id="contatos-table" class="table table-striped table-bordered" style="width:100%">
+            <?php
+            // Busca dados e exibe na tabela
+            $dados = buscarDadosProjetos($conn);
+            ?>
+
+            <label for="projetoSelector">Selecione um Projeto:</label>
+            <select id="projetoSelector" class="form-control">
+                <option value="">Todos os Projetos</option>
+                <?php
+                // Loop para exibir opções do seletor com base nos dados obtidos do banco de dados
+                foreach ($dados as $row) {
+                    echo "<option value='{$row['ID']}'>{$row['Nome']}</option>";
+                }
+                ?>
+            </select>
+            <p>
+            <table id="projetos-table" class="table table-striped table-bordered" style="width:100%">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
-                        <th>Telefone</th>
-                        <th>E-mail</th>
+                        <th>Objetivo</th>
+                        <th>Data de Início</th>
+                        <th>Prazo Estimado</th>
+                        <th>Situação</th>
+                        <th>Tipo de Projeto</th>
+                        <th>Nível de Prioridade</th>
                         <th>Coordenadoria</th>
-                        <th>Tipo de Contato</th>
+                        <th>Gerente de Projeto</th>
+                        <th>Orçamento Previsto</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     // Busca dados e exibe na tabela
-                    //$conn = conectarBanco();
-                    $dadosContatos = buscarDadosContatos($conn);
+                    // $conn = conectarBanco();
+                    $dados = buscarDadosProjetos($conn);
 
-                    foreach ($dadosContatos as $row) {
+                    foreach ($dados as $row) {
                         echo "<tr>";
                         echo "<td>{$row['ID']}</td>";
                         echo "<td>{$row['Nome']}</td>";
-                        // Formatando o número de telefone
-                        echo "<td>" . formatarTelefone($row['Telefone']) . "</td>";
-                        echo "<td>{$row['Email']}</td>";
+                        echo "<td>{$row['Objetivo']}</td>";
+                        echo "<td>{$row['Data_Inicio']}</td>";
+                        echo "<td>{$row['Prazo_Estimado']}</td>";
+                        echo "<td>{$row['NomeSituacao']}</td>";
+                        echo "<td>{$row['NomeTipoProjeto']}</td>";
+                        echo "<td>{$row['NomeNivelPrioridade']}</td>";
                         echo "<td>{$row['NomeCoordenadoria']}</td>";
-                        echo "<td>{$row['NomeTipoContato']}</td>"; // Lembre-se de substituir pelo nome real do campo
-                        // echo "<td><button class='btn btn-info btn-visualizar' data-id='{$row['ID']}'>Visualizar</button></td>";
-                        echo "<td><button class='btn btn-info btn-visualizar' data-id='{$row['ID']}'>Visualizar</button></td>";
+                        echo "<td>{$row['NomeGerenteProjeto']}</td>";
+                        echo "<td>R$ {$row['Orcamento_Previsto']}</td>";
+                        echo "<td><button class='btn btn-info btn-visualizar' data-id='{$row['ID']}'>Visualizar</button>";
+                        echo "<button class='btn btn-success btn-entregas' data-id='{$row['ID']}'>Entregas&nbsp</button></td>";
                         echo "</tr>";
                     }
 
                     $conn->close();
-
-                    // Função para formatar o número de telefone
-                    function formatarTelefone($telefone)
-                    {
-                        // Limpa o número de telefone de caracteres indesejados
-                        $telefoneLimpo = preg_replace('/[^0-9]/', '', $telefone);
-
-                        // Verifica se o número de telefone é válido
-                        if (strlen($telefoneLimpo) === 11) {
-                            // Formata como xx xxxxx-xxxx
-                            return substr($telefoneLimpo, 0, 2) . ' ' . substr($telefoneLimpo, 2, 5) . '-' . substr($telefoneLimpo, 7);
-                        } else {
-                            // Retorna o número original se não for possível formatar
-                            return $telefone;
-                        }
-                    }
                     ?>
                 </tbody>
             </table>
@@ -226,8 +249,6 @@ function buscarDadosContatos($conn)
     </div>
 
     <p>
-        </div>
-        </div>
         <!-- Rodapé -->
     <footer>
         <!-- Rodapé com imagem -->
@@ -245,10 +266,19 @@ function buscarDadosContatos($conn)
     <script>
         $(document).ready(function () {
             // Inicializa o DataTables para a tabela de projetos
-            $('#contatos-table').DataTable({
+            $('#projetos-table').DataTable({
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese.json"
                 }
+            });
+
+            // Adiciona um ouvinte de evento para o seletor de projetos
+            $('#projetoSelector').on('change', function () {
+                // Obtém o valor selecionado do seletor
+                var projetoID = $(this).val();
+
+                // Aplica o filtro na tabela com base no projeto escolhido
+                table.column(2).search(projetoID).draw(); // Assume que a coluna 2 contém os IDs dos projetos
             });
 
             // Adiciona um ouvinte de evento para os botões "Visualizar"
@@ -257,10 +287,23 @@ function buscarDadosContatos($conn)
                 var contatoID = $(this).data('id');
 
                 // Redireciona para a página de visualização com o ID
-                window.location.href = '../contatos/editar_contato.php?id=' + contatoID;
+                window.location.href = 'editar_projeto.php?id=' + contatoID;
             });
         });
     </script>
 
+    <script>
+        $(document).ready(function () {
+            // Adiciona um ouvinte de evento para os botões "Entregas"
+            $('.btn-entregas').on('click', function () {
+                // Obtém o ID do projeto da linha da tabela
+                var projetoID = $(this).data('id');
+
+                // Redireciona para a página de consultas de entregas com o ID do projeto
+                window.location.href = 'entregas/consultar_entrega.php?projeto_id=' + projetoID;
+            });
+        });
+    </script>
 </body>
-</body>
+
+</html>

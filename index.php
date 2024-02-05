@@ -428,9 +428,9 @@ function buscarDadosGerente($conn, $table, $field, $gerenteSelecionado)
                             echo "<td>{$row['Data_Inicio']}</td>";
                             echo "<td>{$row['Prazo_Estimado']}</td>";
                             echo "<td>{$row['TituloEntrega']}</td>";
-                            echo "<td style='background: $corFundo; color: white;'>" . ($percentual !== null ? number_format($percentual, 2, ',', '.') . "%" : '') . "</td>";
+                            echo "<td style='color: $corFundo;'>" . ($percentual !== null ? number_format($percentual, 2, ',', '.') . "%" : '') . "</td>";
                             echo "<td>{$row['TituloAtividade']}</td>";
-                            echo "<td style='background: $corFundo2; color: white;'>" . ($percentual2 !== null ? number_format($percentual2, 2, ',', '.') . "%" : '') . "</td>";
+                            echo "<td style='color: $corFundo2;'>" . ($percentual2 !== null ? number_format($percentual2, 2, ',', '.') . "%" : '') . "</td>";
                             echo "</tr>";
                         }
                         ?>

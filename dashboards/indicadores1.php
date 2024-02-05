@@ -18,8 +18,8 @@ mysqli_query($conn, "SET NAMES 'utf8';");
 
 // Construa a consulta SQL com base na contagem total de projetos por tipo de projeto
 $sql = "SELECT tp.Nome as tipo_projeto, COUNT(*) as total_por_tipo_projeto
-        FROM gestao.projetos p
-        JOIN gestao.tipo_projeto tp ON p.tipo_projeto_ID = tp.ID
+        FROM gestão.projetos p
+        JOIN gestão.tipo_projeto tp ON p.tipo_projeto_ID = tp.ID
         GROUP BY p.tipo_projeto_ID";
 
 // Execute a consulta SQL
@@ -44,8 +44,8 @@ if ($result) {
 
 // Construa a consulta SQL com base na contagem total de projetos por tipo de projeto
 $sql = "SELECT tp.Nome as tipo_projeto, COUNT(*) as total_por_tipo_projeto
-        FROM gestao.projetos p
-        JOIN gestao.tipo_projeto tp ON p.tipo_projeto_ID = tp.ID
+        FROM gestão.projetos p
+        JOIN gestão.tipo_projeto tp ON p.tipo_projeto_ID = tp.ID
         GROUP BY p.tipo_projeto_ID";
 
 // Execute a consulta SQL
@@ -70,8 +70,8 @@ if ($result) {
 
 // Construa a consulta SQL com base na contagem total de projetos por subtipo de projeto
 $sqlSubtipo = "SELECT st.Nome as subtipo_projeto, COUNT(*) as total_por_subtipo_projeto
-              FROM gestao.projetos p
-              JOIN gestao.subtipo_projeto st ON p.subtipo_projeto_ID = st.ID
+              FROM gestão.projetos p
+              JOIN gestão.subtipo_projeto st ON p.subtipo_projeto_ID = st.ID
               GROUP BY p.subtipo_projeto_ID";
 
 // Execute a consulta SQL
@@ -96,8 +96,8 @@ if ($resultSubtipo) {
 
 // Construa a consulta SQL com base na contagem total de projetos por situação
 $sqlSituacao = "SELECT s.Nome as situacao, COUNT(*) as total_por_situacao
-                FROM gestao.projetos p
-                JOIN gestao.situacao s ON p.situacao_ID = s.ID
+                FROM gestão.projetos p
+                JOIN gestão.situacao s ON p.situacao_ID = s.ID
                 GROUP BY p.situacao_ID";
 
 // Execute a consulta SQL
@@ -122,8 +122,8 @@ if ($resultSituacao) {
 
 // Construa a consulta SQL com base na contagem total de projetos por nível de prioridade
 $sqlNivelPrioridade = "SELECT np.Nome as nivel_prioridade, COUNT(*) as total_por_nivel_prioridade
-                      FROM gestao.projetos p
-                      JOIN gestao.nivel_prioridade_projeto np ON p.nivel_prioridade_projeto_ID = np.ID
+                      FROM gestão.projetos p
+                      JOIN gestão.nivel_prioridade_projeto np ON p.nivel_prioridade_projeto_ID = np.ID
                       GROUP BY p.nivel_prioridade_projeto_ID";
 
 // Execute a consulta SQL
@@ -148,8 +148,8 @@ if ($resultNivelPrioridade) {
 
 // Construa a consulta SQL com base na contagem total de projetos por gerente
 $sqlGerente = "SELECT g.Nome as gerente, COUNT(*) as total_por_gerente
-              FROM gestao.projetos p
-              JOIN gestao.gerente_projeto g ON p.gerente_projeto_ID = g.ID
+              FROM gestão.projetos p
+              JOIN gestão.gerente_projeto g ON p.gerente_projeto_ID = g.ID
               GROUP BY p.gerente_projeto_ID";
 
 // Execute a consulta SQL
@@ -174,8 +174,8 @@ if ($resultGerente) {
 
 // Construa a consulta SQL com base na contagem total de projetos por coordenadoria
 $sqlCoordenadoria = "SELECT c.Nome as coordenadoria, COUNT(*) as total_por_coordenadoria
-                    FROM gestao.projetos p
-                    JOIN gestao.coordenadoria c ON p.coordenadoria_ID = c.ID
+                    FROM gestão.projetos p
+                    JOIN gestão.coordenadoria c ON p.coordenadoria_ID = c.ID
                     GROUP BY p.coordenadoria_ID";
 
 // Execute a consulta SQL

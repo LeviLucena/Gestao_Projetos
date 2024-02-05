@@ -20,8 +20,8 @@ mysqli_query($conn, "SET NAMES 'utf8';");
 
 // Construa a consulta SQL com base na contagem total de projetos por entregas
 $sqlEntregas = "SELECT p.Nome as projetos, COUNT(e.titulo) as total_por_entrega
-                FROM gestao.projetos p
-                LEFT JOIN gestao.entregas e ON p.ID = e.projetos_ID
+                FROM gestão.projetos p
+                LEFT JOIN gestão.entregas e ON p.ID = e.projetos_ID
                 GROUP BY p.ID";
 
 // Execute a consulta SQL
@@ -46,8 +46,8 @@ if ($resultEntregas) {
 
 // Construa a consulta SQL com base na contagem total de projetos por situação
 $sqlSituacao = "SELECT s.Nome as situacao, COUNT(e.titulo) as total_por_situacao
-                FROM gestao.entregas e
-                LEFT JOIN gestao.situacao s ON e.situacao_ID = s.ID
+                FROM gestão.entregas e
+                LEFT JOIN gestão.situacao s ON e.situacao_ID = s.ID
                 GROUP BY e.situacao_ID";
 
 // Execute a consulta SQL
@@ -75,8 +75,8 @@ if ($resultSituacao) {
 
 // Construa a consulta SQL com base na contagem total de projetos por tipo de atividade
 $sqlTipoAtividade = "SELECT ta.Nome as tipo_atividade, COUNT(e.titulo) as total_por_tipo_atividade
-                    FROM gestao.entregas e
-                    LEFT JOIN gestao.tipo_atividade ta ON e.tipo_atividade_ID = ta.ID
+                    FROM gestão.entregas e
+                    LEFT JOIN gestão.tipo_atividade ta ON e.tipo_atividade_ID = ta.ID
                     GROUP BY e.tipo_atividade_ID";
 
 // Execute a consulta SQL
@@ -101,8 +101,8 @@ if ($resultTipoAtividade) {
 
 // Construa a consulta SQL para obter a média percentual de entrega por projeto
 $sqlMediaPercentual = "SELECT p.Nome as projetos, AVG(e.percentual) as mediapercentual
-                       FROM gestao.projetos p
-                       LEFT JOIN gestao.entregas e ON p.ID = e.projetos_ID
+                       FROM gestão.projetos p
+                       LEFT JOIN gestão.entregas e ON p.ID = e.projetos_ID
                        GROUP BY p.ID";
 
 // Execute a consulta SQL para obter a média percentual
@@ -127,8 +127,8 @@ if ($resultMediaPercentual) {
 
 // Construa a consulta SQL para obter a média percentual de entrega por situação
 $sqlMediaPercentualSituacao = "SELECT s.Nome as situacao, AVG(e.percentual) as mediapercentual
-                               FROM gestao.entregas e
-                               LEFT JOIN gestao.situacao s ON e.situacao_ID = s.ID
+                               FROM gestão.entregas e
+                               LEFT JOIN gestão.situacao s ON e.situacao_ID = s.ID
                                GROUP BY e.situacao_ID";
 
 // Execute a consulta SQL para obter a média percentual por situação
@@ -153,8 +153,8 @@ if ($resultMediaPercentualSituacao) {
 
 // Construa a consulta SQL para obter a média percentual de entrega por tipo de atividade
 $sqlMediaPercentualTipoAtividade = "SELECT ta.Nome as tipo_atividade, AVG(e.percentual) as mediapercentual
-                                     FROM gestao.entregas e
-                                     LEFT JOIN gestao.tipo_atividade ta ON e.tipo_atividade_ID = ta.ID
+                                     FROM gestão.entregas e
+                                     LEFT JOIN gestão.tipo_atividade ta ON e.tipo_atividade_ID = ta.ID
                                      GROUP BY e.tipo_atividade_ID";
 
 // Execute a consulta SQL para obter a média percentual por tipo de atividade
@@ -179,9 +179,9 @@ if ($resultMediaPercentualTipoAtividade) {
 
 // Construa a consulta SQL para obter a média percentual de entrega por coordenadoria
 $sqlMediaPercentualCoordenadoria = "SELECT c.ID AS coordenadoria_ID, c.Nome AS coordenadoria_Nome, AVG(e.percentual) AS mediapercentual
-                                     FROM gestao.coordenadoria c
-                                     JOIN gestao.projetos p ON c.ID = p.coordenadoria_ID
-                                     JOIN gestao.entregas e ON p.ID = e.projetos_ID
+                                     FROM gestão.coordenadoria c
+                                     JOIN gestão.projetos p ON c.ID = p.coordenadoria_ID
+                                     JOIN gestão.entregas e ON p.ID = e.projetos_ID
                                      GROUP BY c.ID, c.Nome";
 
 // Execute a consulta SQL para obter a média percentual por coordenadoria
@@ -206,9 +206,9 @@ if ($resultMediaPercentualCoordenadoria) {
 
 // Construa a consulta SQL para obter a média percentual de entrega por gerente de projeto
 $sqlMediaPercentualGerente = "SELECT gp.ID AS gerente_projeto_ID, gp.Nome AS gerente_projeto_Nome, AVG(e.percentual) AS mediapercentual
-                               FROM gestao.gerente_projeto gp
-                               JOIN gestao.projetos p ON gp.ID = p.gerente_projeto_ID
-                               JOIN gestao.entregas e ON p.ID = e.projetos_ID
+                               FROM gestão.gerente_projeto gp
+                               JOIN gestão.projetos p ON gp.ID = p.gerente_projeto_ID
+                               JOIN gestão.entregas e ON p.ID = e.projetos_ID
                                GROUP BY gp.ID, gp.Nome";
 
 // Execute a consulta SQL para obter a média percentual por gerente de projeto

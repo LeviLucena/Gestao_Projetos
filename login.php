@@ -6,10 +6,10 @@ session_start(); // Inicie a sessão no início do seu script PHP
 $erro = false;
 
 // Conecte-se ao banco de dados (substitua as informações conforme necessário)
-$host = "172.17.0.55";
-$usuario_banco = "usu_gestao";
-$senha_banco = "gst_db_user26g1";
-$nome_banco = "gestao";
+$host = "localhost";
+$usuario_banco = "root";
+$senha_banco = "";
+$nome_banco = "gestão";
 
 $conexao = new mysqli($host, $usuario_banco, $senha_banco, $nome_banco);
 

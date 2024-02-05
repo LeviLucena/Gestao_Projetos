@@ -1,9 +1,9 @@
 <?php
 // Desenvolvido por Levi Lucena - https://www.linkedin.com/in/levilucena/
-$servername = "172.17.0.55";
-$username = "usu_gestao";
-$password = "gst_db_user26g1";
-$dbname = "gestao";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "gestão";
 
 // Criar a conexão
 $conn = new mysqli($servername, $username, $password, $dbname);

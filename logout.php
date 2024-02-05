@@ -21,7 +21,7 @@ $currentPage = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 // Redirecione para a página de login usando a URL completa
 // Se a referência não contiver "login.php" (evita redirecionamento infinito)
 if (strpos($currentPage, 'login.php') === false) {
-    header("Location: https://projetos-gis.saude.sp.gov.br/login.php");
+    header("Location: login.php");
 } else {
     header("Location: $currentPage");
 }
