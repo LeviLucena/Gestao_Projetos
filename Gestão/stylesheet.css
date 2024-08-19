@@ -1,0 +1,145 @@
+/* Estilo para a div do logo com fundo preto */
+.logo-container {
+    background-color: #000;
+    /* Cor de fundo preto */
+    padding: 11px;
+    /* Espaçamento interno para o fundo preto */
+    border-radius: 0 28px 28px 0;
+    /* Cantos arredondados no canto direito */
+    width: 115%;
+    margin-right: 10px;
+    /* Adicione margem à direita para criar espaço entre o logotipo e o menu */
+}
+
+.logo-container img {
+    max-width: 210px;
+    /* Largura máxima aumentada para 200px (ajuste conforme necessário) */
+}
+
+/* Estilo para o menu superior */
+.navbar {
+    background-color: #333;
+    /* Cor de fundo do menu */
+    color: #fff;
+    /* Cor do texto no menu */
+    margin-left: 5px;
+    /* Adicione margem à esquerda para criar espaço entre o logotipo e o menu */
+}
+
+.navbar ul.navbar-nav li {
+    padding: 3px 5px;
+    /* Espaçamento ajustado (3px acima e abaixo, 10px à esquerda e à direita) */
+}
+
+.navbar ul.navbar-nav li a {
+    color: #fff;
+    /* Cor do texto no link */
+}
+
+.navbar ul.navbar-nav li a:hover {
+    background-color: #555;
+    /* Cor de fundo do link ao passar o mouse */
+}
+
+/* Estilo para o ícone do Font Awesome */
+.navbar i {
+    margin-right: 10px;
+}
+
+footer {
+    width: 70%;
+    text-align: center;
+    /* Centraliza o conteúdo do rodapé */
+    background-color: #000;
+    margin: 0 auto;
+}
+
+/* Estilo para o submenu */
+.submenu {
+    display: none;
+    /* Oculta o submenu por padrão */
+    position: absolute;
+    background-color: #333;
+    /* Cor de fundo do submenu */
+    width: 200px;
+    list-style: none;
+    padding: 0;
+}
+
+/* Estilo para os itens do submenu */
+.submenu li {
+    padding: 5px;
+}
+
+/* Estilo para os links do submenu */
+.submenu li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+
+/* Estilo para os links do submenu ao passar o mouse */
+.submenu li a:hover {
+    background-color: #555;
+    /* Cor de fundo ao passar o mouse */
+}
+
+/* Mostra o submenu quando o item pai é hover */
+.nav .nav-item:hover .submenu {
+    display: block;
+}
+
+/* Mostra o submenu quando o item pai é hover */
+.navbar li:hover .submenu {
+    display: block;
+}
+
+.tabela-projetos {
+    max-width: 70%;
+}
+
+.main {
+    width: 100%;
+    margin: 0 auto;
+}
+
+p {
+    padding-bottom: 25px;
+}
+
+.gradual-bg {
+    background: linear-gradient(to right, red 0%, yellow 50%, green 100%);
+    color: white;
+    /* Garante que o texto seja legível na cor de fundo */
+}
+
+.usuario-logado {
+    float: right;
+    margin-top: 15px;
+    /* Ajuste conforme necessário para o espaçamento desejado */
+    margin-right: 15px;
+    /* Ajuste conforme necessário para o espaçamento desejado */
+    color: #000;
+    /* Adapte a cor conforme necessário */
+}
+
+.custom-width {
+    width: 50%;
+    /* Ou qualquer outra largura desejada */
+}
+
+#progress-bar {
+    background-color: #5bc0de;
+    /* Cor de fundo */
+    border: 1px solid #5bc0de;
+    /* Borda da barra de progresso */
+    color: #fff;
+    /* Cor do texto */
+}
+
+#percentual-number {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
