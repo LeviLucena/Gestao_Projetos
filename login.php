@@ -9,7 +9,7 @@ $erro = false;
 $host = "localhost";
 $usuario_banco = "root";
 $senha_banco = "";
-$nome_banco = "gestão";
+$nome_banco = "gestao";
 
 $conexao = new mysqli($host, $usuario_banco, $senha_banco, $nome_banco);
 
