@@ -18,8 +18,8 @@ $projetoSelecionado = isset($_GET['projeto']) ? $_GET['projeto'] : null;
 
 // Construa a consulta SQL com base nos detalhes de entregas
 $sqlEntregas = "SELECT p.Nome as Projeto_Nome, e.ID, e.Titulo, e.Percentual
-                FROM gestão.projetos p
-                LEFT JOIN gestão.entregas e ON p.ID = e.Projetos_ID";
+                FROM gestao.projetos p
+                LEFT JOIN gestao.entregas e ON p.ID = e.Projetos_ID";
 
 if ($projetoSelecionado !== null) {
     $sqlEntregas .= " WHERE p.ID = $projetoSelecionado";
@@ -51,8 +51,8 @@ if ($resultEntregas) {
 
     // Reexecute a consulta SQL para contar o número de entregas por projeto
     $countEntregasSQL = "SELECT p.Nome as Projeto_Nome, COUNT(e.Titulo) as total_por_entrega
-                         FROM gestão.projetos p
-                         LEFT JOIN gestão.entregas e ON p.ID = e.Projetos_ID";
+                         FROM gestao.projetos p
+                         LEFT JOIN gestao.entregas e ON p.ID = e.Projetos_ID";
 
     if ($projetoSelecionado !== null) {
         $countEntregasSQL .= " WHERE p.ID = $projetoSelecionado";

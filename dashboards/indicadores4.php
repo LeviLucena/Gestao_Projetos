@@ -18,8 +18,8 @@ include_once("../config/conexao.php");
 
 // Construa a consulta SQL com base na contagem total de projetos por entregas
 $sqlEntregas = "SELECT p.Nome as Projeto_Nome, COUNT(e.Titulo) as total_por_entrega
-                FROM gestão.projetos p
-                LEFT JOIN gestão.entregas e ON p.ID = e.Projetos_ID
+                FROM gestao.projetos p
+                LEFT JOIN gestao.entregas e ON p.ID = e.Projetos_ID
                 GROUP BY p.ID";
 
 // Execute a consulta SQL
